@@ -105,27 +105,21 @@ exports.createUser = asyncHandler(async (req, res) => {
 
   await user.save();
 
-  // const payload = {
-  //   user : {
-  //     id: user.id
-  //   }
-  // };
-  // 
-  // jwt.sign(
-  //   payload, 
-  //   process.env.JWT_SECRET, 
-  //   { expiresIn: 3600 },
-  //   (err, token) => {
-  //     if(err) throw err;
-  //     res.json({ token });
-  //   }
-  // );
-
-  console.log(await jwt.sign(
+  const payload = {
+    user : {
+      id: user.id
+    }
+  };
+  
+  jwt.sign(
     payload, 
     process.env.JWT_SECRET, 
     { expiresIn: 3600 },
-  ));
+    (err, token) => {
+      if(err) throw err;
+      res.json({ token });
+    }
+  );
 });
 
 exports.updateUser = asyncHandler(async (req, res) => {
