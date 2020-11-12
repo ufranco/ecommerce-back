@@ -3,7 +3,7 @@ const ErrorResponse = require("../utils/errorResponse");
 const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   
-  console.log(error);
+  console.log(`<ErrorHandler>: `, error);
 
   if (err.name === "CastError") {
     const message = `Resource not found with id of ${error.value}`;

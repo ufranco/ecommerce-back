@@ -14,7 +14,6 @@ passport.use(new GoogleStrategy({
     callbackURL: `http://${process.env.HOSTNAME}:${process.env.PORT}/api/oauth/google/callback`,
   },
   async (accessToken, refreshToken, profile, done) => {
-    console.log(profile);
 
     const { 
       sub,
@@ -64,7 +63,6 @@ passport.use(new FacebookStrategy(
     ],
   },
   async (accessToken, refresToken, profile, done) => {
-    console.log(profile);
 
     const { 
       id,

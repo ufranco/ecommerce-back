@@ -83,6 +83,7 @@ exports.getUser = asyncHandler(async (req, res) => {
 });
 
 exports.createUser = asyncHandler(async (req, res) => {
+
   const {
     username,
     password,
@@ -108,18 +109,18 @@ exports.createUser = asyncHandler(async (req, res) => {
   const payload = {
     user : {
       id: user.id
-    }
-  };
+  }};
   
   jwt.sign(
-    payload, 
-    process.env.JWT_SECRET, 
+    payload,
+    process.env.AUTH_SECRET,
     { expiresIn: 3600 },
     (err, token) => {
       if(err) throw err;
-      res.json({ token });
+      res.status(201).json({ token });
     }
   );
+
 });
 
 exports.updateUser = asyncHandler(async (req, res) => {
@@ -132,7 +133,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ success: false });
   }
 
-  response.status(200).json({
+  res.status(200).json({
     success: true,
     msg: "User info updated",
   });
