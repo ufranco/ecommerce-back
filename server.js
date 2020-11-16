@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const morgan = require("morgan");
 const passport = require('passport');
 const cookieSession = require('cookie-session');
@@ -17,6 +18,7 @@ const reviews = require("./routes/reviews");
 
 const app = express();
 app.use(express.json());
+app.use(cors);
 
 app.use(cookieSession({
   name: 'e-commerce-session',

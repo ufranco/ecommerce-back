@@ -5,10 +5,7 @@ const UserSchema = Schema(
     username: {
       type: String,
       trim: true,
-      required: [
-        true, 
-        'Please provide a Username'
-      ],
+      required: [true, 'Please provide a Username' ],
       maxlength: [
         30, 
         "Username cannot be larger than 30 characters"
@@ -17,10 +14,7 @@ const UserSchema = Schema(
         /^[a-zA-Z0-9]+$/, 
         "Please provide a valid username."
       ],
-      unique: [
-        true, 
-        "Username already taken"
-      ],
+      unique: [true, "Username already taken"],
     },
     email: {
       type: String,
