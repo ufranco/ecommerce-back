@@ -23,7 +23,7 @@ exports.sendEmailConfirmation = async(req, user) => {
 
   const confirmationUrl = `https://${process.env.HOSTNAME}:${process.env.PORT}/${token}`;
 
-  console.log(confirmationUrl)
+  console.log(confirmationUrl);
 
   const mailOptions = {
     from: 'testestrestigres@gmail.com',
