@@ -18,7 +18,7 @@ const reviews = require("./routes/reviews");
 
 const app = express();
 app.use(express.json());
-app.use(cors);
+app.use(cors());
 
 app.use(cookieSession({
   name: 'e-commerce-session',

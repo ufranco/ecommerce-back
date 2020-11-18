@@ -1,8 +1,6 @@
 const User = require("../models/User");
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 exports.getUsers = asyncHandler(async (req, res) => {
   let query;
@@ -19,11 +17,13 @@ exports.getUsers = asyncHandler(async (req, res) => {
   );
 
   query = User.find(JSON.parse(queryStr));
+  
+  let fields = req.query.select ? req.query.select.split(",")
+  : 
+  [];
 
-  if (req.query.select) {
-    const fields = req.query.select.split(",").join(" ");
-    query = query.select(field);
-  }
+  fields.push('-password');
+  query = query.select(fields.join(" "));
 
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
@@ -67,7 +67,7 @@ exports.getUsers = asyncHandler(async (req, res) => {
 });
 
 exports.getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).select('-password');
 
   if (!user) {
     return next(
@@ -79,47 +79,6 @@ exports.getUser = asyncHandler(async (req, res) => {
     success: true,
     data: user,
   });
-
-});
-
-exports.createUser = asyncHandler(async (req, res) => {
-
-  const {
-    username,
-    password,
-    email,
-    profileName,
-    country,
-    profilePic,
-  } = req.body;
-
-  const salt = await bcrypt.genSalt(10);
-
-  const user = new User({
-    username,
-    password : await bcrypt.hash(password, salt),
-    email,
-    profileName,
-    country,
-    profilePic
-  });
-
-  await user.save();
-
-  const payload = {
-    user : {
-      id: user.id
-  }};
-  
-  jwt.sign(
-    payload,
-    process.env.AUTH_SECRET,
-    { expiresIn: 3600 },
-    (err, token) => {
-      if(err) throw err;
-      res.status(201).json({ token });
-    }
-  );
 
 });
 

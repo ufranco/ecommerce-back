@@ -3,11 +3,6 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('../middleware/asyncHandler');
 const User = require('../models/User');
 
-exports.getCurrentUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id).select('-password');
-  res.json(user)
-});
-
 exports.logIn = asyncHandler(async (req, res) => {
 
   const  { 
@@ -47,6 +42,47 @@ exports.logIn = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({ token });
+
+});
+
+exports.register = asyncHandler(async (req, res) => {
+
+  const {
+    username,
+    password,
+    email,
+    profileName,
+    country,
+    profilePic,
+  } = req.body;
+
+  const salt = await bcrypt.genSalt(10);
+
+  const user = new User({
+    username,
+    password : await bcrypt.hash(password, salt),
+    email,
+    profileName,
+    country,
+    profilePic
+  });
+
+  await user.save();
+
+  const payload = {
+    user : {
+      id: user.id
+  }};
+  
+  jwt.sign(
+    payload,
+    process.env.AUTH_SECRET,
+    { expiresIn: 3600 },
+    (err, token) => {
+      if(err) throw err;
+      res.status(201).json({ token });
+    }
+  );
 
 });
 
